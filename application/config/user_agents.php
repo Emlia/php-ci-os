@@ -28,13 +28,13 @@ $platforms = array(
 	'windows 95'		=> 'Windows 95',
 	'win95'				=> 'Windows 95',
 	'windows phone'			=> 'Windows Phone',
-	'windows'			=> 'Unknown Windows OS',
+	'windows'			=> 'Unknown Windows Os',
 	'android'			=> 'Android',
 	'blackberry'		=> 'BlackBerry',
 	'iphone'			=> 'iOS',
 	'ipad'				=> 'iOS',
 	'ipod'				=> 'iOS',
-	'os x'				=> 'Mac OS X',
+	'os x'				=> 'Mac Os X',
 	'ppc mac'			=> 'Power PC Mac',
 	'freebsd'			=> 'FreeBSD',
 	'ppc'				=> 'Macintosh',
@@ -51,8 +51,8 @@ $platforms = array(
 	'bsdi'				=> 'BSDi',
 	'openbsd'			=> 'OpenBSD',
 	'gnu'				=> 'GNU/Linux',
-	'unix'				=> 'Unknown Unix OS',
-	'symbian' 			=> 'Symbian OS'
+	'unix'				=> 'Unknown Unix Os',
+	'symbian' 			=> 'Symbian Os'
 );
 
 
