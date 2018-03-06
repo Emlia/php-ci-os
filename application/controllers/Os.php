@@ -71,10 +71,36 @@ class Os extends CI_Controller
     public function addQuestion()
     {
         try {
-
+            $type = $this->input->post('type', true);
+            $tag = $this->input->post('tag', true);
             $chapter = $this->input->post('chapter', true);
-            $content = $this->input->post('content', true);
-            $this->OsModel->addQuestion($chapter, $content);
+            $text = $this->input->post('text', true);
+            $src = $this->input->post('src', true);
+            $options = $this->input->post('options', true);
+            $answer = $this->input->post('answer', true);
+            $analysis = $this->input->post('analysis', true);
+            $this->OsModel->addQuestion($type, $tag, $chapter, $text, $src, $options, $answer, $analysis);
+            eee('200', 'add success');
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+
+
+    }
+
+    public function addQuestionTest()
+    {
+        try {
+            $type = $this->input->post('type', true);
+            $tag = $this->input->post('tag', true);
+            $chapter = $this->input->post('chapter', true);
+            $text = $this->input->post('text', true);
+            $src = $this->input->post('src', true);
+            $options = $this->input->post('options', true);
+            $answer = $this->input->post('answer', true);
+            $analysis = $this->input->post('analysis', true);
+            $this->OsModel->addQuestion($type, $tag, $chapter, $text, $src, $options, $answer, $analysis);
             eee('200', 'add success');
 
         } catch (Exception $e) {
@@ -170,4 +196,83 @@ class Os extends CI_Controller
 
     }
     // type end
+    // options start
+    public function addOptions()
+    {
+        try {
+
+            $value = $this->input->post('value', true);
+            $label = $this->input->post('label', true);
+            $res = $this->OsModel->addOptions($value, $label);
+            eee('200', $res);
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+
+
+    }
+    // options end
+    // answer start
+    public function addAnswer()
+    {
+        try {
+
+            $userid = $this->input->post('userid', true);
+            $content = $this->input->post('content', true);
+
+//            $content = json_encode($content, JSON_UNESCAPED_UNICODE);
+//            echo var_dump($content);
+// 过滤
+//            $content = addslashes($content);
+            $this->OsModel->addAnswer($userid, $content);
+            eee('200', 'add success');
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+
+
+    }
+
+    public function getAnswers()
+    {
+        try {
+            $res = $this->OsModel->getAnswers();
+            eee("200", $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+
+
+    }
+    // answer end
+
+    // user start
+    public function login()
+    {
+        $username = $this->input->post('username', true);
+        $password = $this->input->post('password', true);
+        $res = $this->OsModel->login($username, $password);
+        if (count($res)) {
+            eee("200", $res);
+        } else {
+            eee("500", $res);
+        }
+    }
+
+    public function register()
+    {
+        try {
+            $username = $this->input->post('username', true);
+            $password = $this->input->post('password', true);
+            $res = $this->OsModel->register($username, $password);
+            eee('200', 'add success');
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+
+    }
+    // user end
 }

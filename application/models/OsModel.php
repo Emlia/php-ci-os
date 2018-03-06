@@ -39,12 +39,13 @@ class OsModel extends CI_model
     // tag end
 
     // quesion strat
-    public function addQuestion($chapter, $content)
+    public function addQuestion($type, $tag, $chapter, $text, $src, $options, $answer, $analysis)
     {
 
         $insert_data = array(
-            'chapter' => $chapter,
-            'content' => $content
+            "type" => $type, "tag" => $tag, "chapter" => $chapter,
+            "text" => $text, "src" => $src, "options" => $options,
+            "answer" => $answer, "analysis" => $analysis
         );
         $this->db->insert("question", $insert_data);
     }
@@ -90,4 +91,54 @@ class OsModel extends CI_model
         return $query->result_array();
     }
     // type end
+
+    // options start
+    public function addOptions($value, $label)
+    {
+        $insert_data = array(
+            'value' => $value,
+            'label' => $label
+        );
+//        $res = $this->db->insert("options", $insert_data);
+        $res = $this->db->insert_id("options", $insert_data);
+        return $res;
+    }
+
+    // options end
+    // answer start
+    public function addAnswer($userid, $content)
+    {
+        $insert_data = array(
+            'userid' => $userid,
+            'content' => $content
+        );
+        $res = $this->db->insert("answer", $insert_data);
+    }
+
+    public function getAnswers()
+    {
+        $query = $this->db->get('answer');
+        return $query->result_array();
+    }
+    // answer end
+    // user start
+    public function login($username, $password)
+    {
+        $this->db->where('username', $username);
+        $this->db->where('password', $password);
+        $this->db->from('user');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
+    }
+
+    public function register($username, $password)
+    {
+        $insert_data = array(
+            'username' => $username,
+            'password' => $password
+        );
+        $res = $this->db->insert("user", $insert_data);
+    }
+    // user end
 }
