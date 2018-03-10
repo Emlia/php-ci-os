@@ -132,11 +132,12 @@ class OsModel extends CI_model
         return $res;
     }
 
-    public function register($username, $password)
+    public function register($username, $password,$appkey)
     {
         $insert_data = array(
             'username' => $username,
-            'password' => $password
+            'password' => $password,
+            'appkey'=>$appkey
         );
         $res = $this->db->insert("user", $insert_data);
     }

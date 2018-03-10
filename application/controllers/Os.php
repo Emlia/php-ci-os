@@ -8,6 +8,11 @@ function eee($ret, $data = null)
     echo json_encode(array("ret" => $ret, "data" => $data), JSON_UNESCAPED_UNICODE);
 }
 
+function authorityManagement()
+{
+
+}
+
 class Os extends CI_Controller
 {
     public function __construct()
@@ -258,6 +263,7 @@ class Os extends CI_Controller
         if (count($res)) {
             eee("200", $res);
         } else {
+            authorityManagement();
             eee("500", $res);
         }
     }
@@ -267,7 +273,8 @@ class Os extends CI_Controller
         try {
             $username = $this->input->post('username', true);
             $password = $this->input->post('password', true);
-            $res = $this->OsModel->register($username, $password);
+            $appkey =  md5(uniqid(microtime(true),true));
+            $res = $this->OsModel->register($username, $password,$appkey);
             eee('200', 'add success');
         } catch (Exception $e) {
             eee("400", $e);
