@@ -141,6 +141,17 @@ class Os extends CI_Controller
         }
 
     }
+    public function getQuestionById()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $res = $this->OsModel->getAnswersById($userid);
+            eee("200", $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
     // question end
 
     // chapter start
@@ -225,19 +236,74 @@ class Os extends CI_Controller
 
             $userid = $this->input->post('userid', true);
             $content = $this->input->post('content', true);
-
-//            $content = json_encode($content, JSON_UNESCAPED_UNICODE);
-//            echo var_dump($content);
-// 过滤
-//            $content = addslashes($content);
             $this->OsModel->addAnswer($userid, $content);
             eee('200', 'add success');
 
         } catch (Exception $e) {
             eee('400', $e);
         }
+    }
+    public function updateAnswer()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $orderAnswer = $this->input->post('orderAnswer', true);
+            $chapterAnswer = $this->input->post('chapterAnswer', true);
+            $simulationAnswer = $this->input->post('simulationAnswer', true);
+            $error = $this->input->post('error', true);
+            $this->OsModel->updateAnswer($userid, $orderAnswer,$chapterAnswer,$simulationAnswer,$error);
+            eee('200', 'add success');
 
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+    }
+    public function updateOrderAnswer()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $orderAnswer = $this->input->post('orderAnswer', true);
+            $this->OsModel->updateOrderAnswer($userid, $orderAnswer);
+            eee('200', 'add success');
 
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+    }
+    public function updateChapterAnswer()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $chapterAnswer = $this->input->post('chapterAnswer', true);
+            $this->OsModel->updateChapterAnswer($userid, $chapterAnswer);
+            eee('200', 'add success');
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+    }
+    public function updateSimulationAnswer()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $simulationAnswer = $this->input->post('simulationAnswer', true);
+            $this->OsModel->updateSimulationAnswer($userid, $simulationAnswer);
+            eee('200', 'add success');
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+    }
+    public function getAnswersById()
+    {
+        try {
+            $userid = $this->input->post('userid', true);
+            $res = $this->OsModel->getAnswersById($userid);
+            eee("200", $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
     }
 
     public function getAnswers()

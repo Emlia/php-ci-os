@@ -115,6 +115,58 @@ class OsModel extends CI_model
         $res = $this->db->insert("answer", $insert_data);
     }
 
+    public function updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error)
+    {
+        $data = array(
+            'userid' => $userid,
+            'orderAnswer' => $orderAnswer,
+            'chapterAnswer' => $chapterAnswer,
+            'simulationAnswer' => $simulationAnswer,
+            'error' => $error
+        );
+
+        $this->db->replace('answer', $data);
+    }
+
+    public function updateOrderAnswer($userid, $orderAnswer)
+    {
+        $data = array(
+            'userid' => $userid,
+            'orderAnswer' => $orderAnswer
+        );
+
+        $this->db->replace('answer', $data);
+    }
+
+    public function updateChapterAnswer($userid, $chapterAnswer)
+    {
+        $data = array(
+            'userid' => $userid,
+            'chapterAnswer' => $chapterAnswer
+        );
+
+        $this->db->replace('answer', $data);
+    }
+
+    public function updateSimulationAnswer($userid, $simulationAnswer)
+    {
+        $data = array(
+            'userid' => $userid,
+            'simulationAnswer' => $simulationAnswer
+        );
+
+        $this->db->replace('answer', $data);
+    }
+
+    public function getAnswersById($userid)
+    {
+//        $query = $this->db->get('answer');
+        $this->db->where('userid', $userid);
+        $this->db->from('answer');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function getAnswers()
     {
         $query = $this->db->get('answer');
@@ -132,12 +184,12 @@ class OsModel extends CI_model
         return $res;
     }
 
-    public function register($username, $password,$appkey)
+    public function register($username, $password, $appkey)
     {
         $insert_data = array(
             'username' => $username,
             'password' => $password,
-            'appkey'=>$appkey
+            'appkey' => $appkey
         );
         $res = $this->db->insert("user", $insert_data);
     }
