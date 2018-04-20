@@ -49,6 +49,15 @@ class OsModel extends CI_model
         );
         $this->db->insert("question", $insert_data);
     }
+    public function updateQuestion($id, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis){
+        $insert_data = array(
+            "id"=>$id,
+            "type" => $type, "tag" => $tag, "chapter" => $chapter,
+            "text" => $text, "src" => $src, "options" => $options,
+            "answer" => $answer, "analysis" => $analysis
+        );
+        $this->db->replace("question", $insert_data);
+    }
 
     public function getQuestions()
     {
@@ -59,6 +68,13 @@ class OsModel extends CI_model
     public function editQuestion()
     {
 
+    }
+    public  function searchQuestion($search){
+        $this->db->like('text', $search);
+        $this->db->from('question');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
     }
     // quesion end
 

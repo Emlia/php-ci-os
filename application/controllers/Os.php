@@ -94,6 +94,27 @@ class Os extends CI_Controller
 
     }
 
+    public function updateQuestion()
+    {
+        try {
+            $id = $this->input->post('id', true);
+            $type = $this->input->post('type', true);
+            $tag = $this->input->post('tag', true);
+            $chapter = $this->input->post('chapter', true);
+            $text = $this->input->post('text', true);
+            $src = $this->input->post('src', true);
+            $options = $this->input->post('options', true);
+            $answer = $this->input->post('answer', true);
+            $analysis = $this->input->post('analysis', true);
+            $this->OsModel->updateQuestion($id, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis);
+            eee('200', 'add success');
+
+        } catch (Exception $e) {
+            eee('400', $e);
+        }
+
+    }
+
     public function addQuestionTest()
     {
         try {
@@ -141,11 +162,24 @@ class Os extends CI_Controller
         }
 
     }
+
     public function getQuestionById()
     {
         try {
             $userid = $this->input->post('userid', true);
             $res = $this->OsModel->getAnswersById($userid);
+            eee("200", $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
+
+    public function searchQuestion()
+    {
+        try {
+            $search = $this->input->post('search', true);
+            $res = $this->OsModel->searchQuestion($search);
             eee("200", $res);
 
         } catch (Exception $e) {
@@ -243,6 +277,7 @@ class Os extends CI_Controller
             eee('400', $e);
         }
     }
+
     public function updateAnswer()
     {
         try {
@@ -251,13 +286,14 @@ class Os extends CI_Controller
             $chapterAnswer = $this->input->post('chapterAnswer', true);
             $simulationAnswer = $this->input->post('simulationAnswer', true);
             $error = $this->input->post('error', true);
-            $this->OsModel->updateAnswer($userid, $orderAnswer,$chapterAnswer,$simulationAnswer,$error);
+            $this->OsModel->updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error);
             eee('200', 'add success');
 
         } catch (Exception $e) {
             eee('400', $e);
         }
     }
+
     public function updateOrderAnswer()
     {
         try {
@@ -270,6 +306,7 @@ class Os extends CI_Controller
             eee('400', $e);
         }
     }
+
     public function updateChapterAnswer()
     {
         try {
@@ -282,6 +319,7 @@ class Os extends CI_Controller
             eee('400', $e);
         }
     }
+
     public function updateSimulationAnswer()
     {
         try {
@@ -294,6 +332,7 @@ class Os extends CI_Controller
             eee('400', $e);
         }
     }
+
     public function getAnswersById()
     {
         try {
@@ -339,8 +378,8 @@ class Os extends CI_Controller
         try {
             $username = $this->input->post('username', true);
             $password = $this->input->post('password', true);
-            $appkey =  md5(uniqid(microtime(true),true));
-            $res = $this->OsModel->register($username, $password,$appkey);
+            $appkey = md5(uniqid(microtime(true), true));
+            $res = $this->OsModel->register($username, $password, $appkey);
             eee('200', 'add success');
         } catch (Exception $e) {
             eee("400", $e);
