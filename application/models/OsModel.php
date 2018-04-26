@@ -49,9 +49,11 @@ class OsModel extends CI_model
         );
         $this->db->insert("question", $insert_data);
     }
-    public function updateQuestion($id, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis){
+
+    public function updateQuestion($id, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis)
+    {
         $insert_data = array(
-            "id"=>$id,
+            "id" => $id,
             "type" => $type, "tag" => $tag, "chapter" => $chapter,
             "text" => $text, "src" => $src, "options" => $options,
             "answer" => $answer, "analysis" => $analysis
@@ -69,7 +71,9 @@ class OsModel extends CI_model
     {
 
     }
-    public  function searchQuestion($search){
+
+    public function searchQuestion($search)
+    {
         $this->db->like('text', $search);
         $this->db->from('question');
         $query = $this->db->get();
@@ -190,6 +194,24 @@ class OsModel extends CI_model
     }
     // answer end
     // user start
+    public function getUserByName($username)
+    {
+        $this->db->where('username', $username);
+        $this->db->from('user');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
+    }
+
+    public function getUserById($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->from('user');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
+    }
+
     public function login($username, $password)
     {
         $this->db->where('username', $username);
@@ -209,5 +231,45 @@ class OsModel extends CI_model
         );
         $res = $this->db->insert("user", $insert_data);
     }
+
+    public function updateUser($id, $username, $password, $appkey)
+    {
+        $data = array(
+            'id' => $id,
+            'username' => $username,
+            'password' => $password,
+            'appkey' => $appkey
+        );
+
+        $this->db->replace('user', $data);
+    }
+
+    public function searchUser($search)
+    {
+        $this->db->like('username', $search);
+        $this->db->from('user');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
+    }
     // user end
+    // configuration start
+    public function updateConfiguration($id, $notice)
+    {
+        $data = array(
+            'id' => $id,
+            'notice' => $notice
+        );
+
+        $this->db->replace('configuration', $data);
+    }
+
+    public function getConfiguration()
+    {
+        $this->db->where('id', 999);
+        $this->db->from('configuration');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    // configuration end
 }

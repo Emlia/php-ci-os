@@ -379,12 +379,101 @@ class Os extends CI_Controller
             $username = $this->input->post('username', true);
             $password = $this->input->post('password', true);
             $appkey = md5(uniqid(microtime(true), true));
+            $flag = $this->OsModel->getUserByName($username);
+            if (count($flag) != 0) {
+                eee("300", '已有该用户');
+                die();
+            }
             $res = $this->OsModel->register($username, $password, $appkey);
-            eee('200', 'add success');
+            eee('200', $flag);
         } catch (Exception $e) {
             eee("400", $e);
         }
 
     }
+
+    public function forgetPassword()
+    {
+        try {
+            $username = $this->input->post('username', true);
+            $oldPassword = $this->input->post('oldPassword', true);
+            $newPassword = $this->input->post('newPassword', true);
+            $user = $this->OsModel->getUserByName($username);
+
+            if (count($user) == 1 && $user[0]->password == $oldPassword) {
+                $id = $user[0]->id;
+                $appkey = md5(uniqid(microtime(true), true));
+                $res = $this->OsModel->updateUser($id, $username, $newPassword, $appkey);
+                eee('200', $res);
+            } else {
+                eee("300", '密码输入错误');
+            }
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+
+    }
+
+    public function searchUser()
+    {
+        try {
+            $username = $this->input->post('username', true);
+            $res = $this->OsModel->searchUser($username);
+            eee('200', $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+
+    }
+
+    public function resetPassword()
+    {
+
+        try {
+            $id = $this->input->post('id', true);
+            $newPassword = $this->input->post('newPassword', true);
+            $user = $this->OsModel->getUserById($id);
+            if (count($user) == 1) {
+                $username = $user[0]->username;
+                $appkey = md5(uniqid(microtime(true), true));
+                $res = $this->OsModel->updateUser($id, $username, $newPassword, $appkey);
+                eee('200', $res);
+            } else {
+                eee('300', 'error');
+            }
+
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
     // user end
+    // configuration start
+    public function updateConfiguration()
+    {
+
+        try {
+            // only one configuration
+            $id = 999;
+            $notice = $this->input->post('notice', true);
+            $res = $this->OsModel->updateConfiguration($id, $notice);
+            eee('200', $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
+    public function getConfiguration()
+    {
+
+        try {
+            $res = $this->OsModel->getConfiguration();
+            eee('200', $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
+    // configuration end
 }
