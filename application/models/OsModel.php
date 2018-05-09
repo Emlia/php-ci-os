@@ -67,9 +67,10 @@ class OsModel extends CI_model
         return $query->result_array();
     }
 
-    public function editQuestion()
+    public function deleteQuestion($qid)
     {
-
+        $this->db->where('id', $qid);
+        $this->db->delete('question');
     }
 
     public function searchQuestion($search)
@@ -135,14 +136,16 @@ class OsModel extends CI_model
         $res = $this->db->insert("answer", $insert_data);
     }
 
-    public function updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error)
+    public function updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error, $simulation, $errorAnswer)
     {
         $data = array(
             'userid' => $userid,
             'orderAnswer' => $orderAnswer,
             'chapterAnswer' => $chapterAnswer,
             'simulationAnswer' => $simulationAnswer,
-            'error' => $error
+            'error' => $error,
+            'errorAnswer' => $errorAnswer,
+            'simulation' => $simulation
         );
 
         $this->db->replace('answer', $data);
@@ -197,6 +200,17 @@ class OsModel extends CI_model
     public function getUserByName($username)
     {
         $this->db->where('username', $username);
+        $this->db->from('user');
+        $query = $this->db->get();
+        $res = $query->result();
+        return $res;
+    }
+
+    public function getUserById_Username_Appkey($id, $username, $appkey)
+    {
+        $this->db->where('id', $id);
+        $this->db->where('username', $username);
+        $this->db->where('appkey', $appkey);
         $this->db->from('user');
         $query = $this->db->get();
         $res = $query->result();

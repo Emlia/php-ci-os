@@ -8,7 +8,8 @@ function eee($ret, $data = null)
     echo json_encode(array("ret" => $ret, "data" => $data), JSON_UNESCAPED_UNICODE);
 }
 
-function authorityManagement()
+
+function adminAuthority()
 {
 
 }
@@ -76,6 +77,7 @@ class Os extends CI_Controller
     public function addQuestion()
     {
         try {
+            $this->adminAuthority();
             $type = $this->input->post('type', true);
             $tag = $this->input->post('tag', true);
             $chapter = $this->input->post('chapter', true);
@@ -97,7 +99,8 @@ class Os extends CI_Controller
     public function updateQuestion()
     {
         try {
-            $id = $this->input->post('id', true);
+            $this->adminAuthority();
+            $qid = $this->input->post('qid', true);
             $type = $this->input->post('type', true);
             $tag = $this->input->post('tag', true);
             $chapter = $this->input->post('chapter', true);
@@ -106,7 +109,7 @@ class Os extends CI_Controller
             $options = $this->input->post('options', true);
             $answer = $this->input->post('answer', true);
             $analysis = $this->input->post('analysis', true);
-            $this->OsModel->updateQuestion($id, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis);
+            $this->OsModel->updateQuestion($qid, $type, $tag, $chapter, $text, $src, $options, $answer, $analysis);
             eee('200', 'add success');
 
         } catch (Exception $e) {
@@ -180,6 +183,18 @@ class Os extends CI_Controller
         try {
             $search = $this->input->post('search', true);
             $res = $this->OsModel->searchQuestion($search);
+            eee("200", $res);
+
+        } catch (Exception $e) {
+            eee("400", $e);
+        }
+    }
+    public function deleteQuestion()
+    {
+        try {
+            $this->adminAuthority();
+            $qid = $this->input->post('qid', true);
+            $res = $this->OsModel->deleteQuestion($qid);
             eee("200", $res);
 
         } catch (Exception $e) {
@@ -281,12 +296,15 @@ class Os extends CI_Controller
     public function updateAnswer()
     {
         try {
+            $this->userAuthority();
             $userid = $this->input->post('userid', true);
             $orderAnswer = $this->input->post('orderAnswer', true);
             $chapterAnswer = $this->input->post('chapterAnswer', true);
             $simulationAnswer = $this->input->post('simulationAnswer', true);
+            $simulation = $this->input->post('simulation', true);
+            $errorAnswer = $this->input->post('errorAnswer', true);
             $error = $this->input->post('error', true);
-            $this->OsModel->updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error);
+            $this->OsModel->updateAnswer($userid, $orderAnswer, $chapterAnswer, $simulationAnswer, $error,$simulation,$errorAnswer);
             eee('200', 'add success');
 
         } catch (Exception $e) {
@@ -366,9 +384,11 @@ class Os extends CI_Controller
         $password = $this->input->post('password', true);
         $res = $this->OsModel->login($username, $password);
         if (count($res)) {
-            eee("200", $res);
+            $id = $res[0]->id;
+            $appkey = md5(uniqid(microtime(true), true));
+            $this->OsModel->updateUser($id, $username, $password, $appkey);
+            eee("200", array("id" => $id, "username" => $username, "appkey" => $appkey));
         } else {
-            authorityManagement();
             eee("500", $res);
         }
     }
@@ -417,6 +437,7 @@ class Os extends CI_Controller
     public function searchUser()
     {
         try {
+            $this->adminAuthority();
             $username = $this->input->post('username', true);
             $res = $this->OsModel->searchUser($username);
             eee('200', $res);
@@ -431,13 +452,14 @@ class Os extends CI_Controller
     {
 
         try {
-            $id = $this->input->post('id', true);
+            $this->adminAuthority();
+            $nid = $this->input->post('nid', true);
             $newPassword = $this->input->post('newPassword', true);
-            $user = $this->OsModel->getUserById($id);
+            $user = $this->OsModel->getUserById($nid);
             if (count($user) == 1) {
                 $username = $user[0]->username;
                 $appkey = md5(uniqid(microtime(true), true));
-                $res = $this->OsModel->updateUser($id, $username, $newPassword, $appkey);
+                $res = $this->OsModel->updateUser($nid, $username, $newPassword, $appkey);
                 eee('200', $res);
             } else {
                 eee('300', 'error');
@@ -448,12 +470,57 @@ class Os extends CI_Controller
             eee("400", $e);
         }
     }
+
+    public function loginAuthority()
+    {
+        $this->userAuthority();
+        eee('200', '用户验证成功');
+    }
+
+    private function userAuthority()
+    {
+        try {
+            $id = $this->input->post('id', true);
+            $appkey = $this->input->post('appkey', true);
+            $username = $this->input->post('username', true);
+            $user = $this->OsModel->getUserById_Username_Appkey($id, $username, $appkey);
+            if (count($user) == 1) {
+//                return;
+            } else {
+                eee('300', '用户验证失败');
+                die();
+            }
+
+        } catch (Exception $e) {
+            eee("400", $e);
+            die();
+        }
+    }
+
+    private function adminAuthority()
+    {
+        try {
+            $id = $this->input->post('id', true);
+            $appkey = $this->input->post('appkey', true);
+            $user = $this->OsModel->getUserById_Username_Appkey($id, "admin", $appkey);
+            if (count($user) == 1) {
+            } else {
+                eee('300', '用户验证失败');
+                die();
+            }
+        } catch (Exception $e) {
+            eee("400", $e);
+            die();
+        }
+    }
+
     // user end
     // configuration start
     public function updateConfiguration()
     {
 
         try {
+            $this->adminAuthority();
             // only one configuration
             $id = 999;
             $notice = $this->input->post('notice', true);
@@ -464,6 +531,7 @@ class Os extends CI_Controller
             eee("400", $e);
         }
     }
+
     public function getConfiguration()
     {
 
